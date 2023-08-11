@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  generic_name: MyString
+  purpose: MyString
+  dosage_text: MyText
+  dosage_form: MyString
+  active_substance: MyString
+  route: MyString
+  reminder_date: 2023-08-11
+  reminder_time: 2023-08-11 23:32:09
+  recurring_interval: MyString
+  dose: MyString
+
+two:
+  generic_name: MyString
+  purpose: MyString
+  dosage_text: MyText
+  dosage_form: MyString
+  active_substance: MyString
+  route: MyString
+  reminder_date: 2023-08-11
+  reminder_time: 2023-08-11 23:32:09
+  recurring_interval: MyString
+  dose: MyString
