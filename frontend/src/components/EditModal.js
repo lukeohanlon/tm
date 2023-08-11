@@ -18,7 +18,7 @@ const EditModal = ({ medication, onClose, onEditSuccess }) => {
 
   const handleEditSubmit = async () => {
     try {
-      const apiBaseUrl = `http://16.171.145.223:3000/api/v1/medications/${medication.id}`;
+      const apiBaseUrl = `http://16.171.42.210:3000/api/v1/medications/${medication.id}`;
       const response = await axios.put(apiBaseUrl, editedMedication);
 
       // Call the onEditSuccess callback with the updated medication
