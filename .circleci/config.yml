@@ -43,15 +43,11 @@ jobs:
           name: docker-login
           command: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - run:
-          name: build-backend-docker-image
-          command: docker build -t $BACKEND_IMAGE:latest ./backend
-      - run:
           name: build-frontend-docker-image
           command: docker build -t $FRONTEND_IMAGE:latest ./frontend
       - run:
           name: publish-docker-images
           command: |
-            docker push $BACKEND_IMAGE
             docker push $FRONTEND_IMAGE
 
   deploy:
