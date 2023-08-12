@@ -34,11 +34,13 @@ jobs:
       - run:
           name: install-npm
           command: npm install
-          working_directory: ~/tm/frontend
       - save_cache:
           key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}} 
           paths:
             - ./frontend/node_modules
+      - run:
+          name: build-frontend
+          command: cd frontend && npm run build
 
   deploy:
     docker:
