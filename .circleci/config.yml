@@ -5,50 +5,6 @@ executors:
     docker:
       - image: ruby:3.0.0
 
-jobs:
-  build:
-    working_directory: ~/tm/frontend
-    docker:
-      - image: circleci/node:10.16.3
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: npm install
-      - run:
-          name: Build and test frontend
-          command: npm run build
-      - persist_to_workspace:
-          root: frontend
-          paths:
-            - build
-
-  backend:
-    executor: ruby-executor
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Install dependencies
-          command: bundle install
-      - run:
-          name: Run tests
-          command: bundle exec rspec
-      - persist_to_workspace:
-          root: backend
-          paths:
-            - tmp
-
-  deploy:
-    executor: ruby-executor
-    steps:
-      - checkout
-      - run:
-          name: Deploy to EC2
-          command: |
-            chmod 400 MedTracker.pem
-            ssh -i "MedTracker.pem" $EC2_USERNAME@$EC2_PUBLIC_DNS "cd tm && ./deploy.sh"
-
 workflows:
   version: 2
   build-and-deploy:
@@ -60,3 +16,43 @@ workflows:
       - deploy:
           requires:
             - backend
+
+jobs:
+  build:
+    working_directory: ~/todos
+    docker:
+      - image: circleci/node:10.16.3
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@5' 
+      - run:
+          name: install-npm
+          command: npm install
+      - restore_cache:
+          key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}}
+      - run:
+          name: install-npm
+          command: npm install
+      - save_cache:
+          key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}} 
+          paths:
+            - ./frontend/node_modules
+  
+      - run:
+          name: publish-docker-images
+          command: |
+            docker push $BACKEND_IMAGE
+            docker push $FRONTEND_IMAGE
+
+  deploy:
+    executor: ruby-executor
+    steps:
+      - checkout
+      - run:
+          name: Deploy to EC2
+          command: |
+            chmod 400 MedTracker.pem
+            ssh -i "MedTracker.pem" $EC2_USERNAME@$EC2_PUBLIC_DNS "cd tm && ./deploy.sh"
