@@ -12,7 +12,4 @@ docker run -d -v app-storage:/rails/storage -p 3000:3000 --env RAILS_MASTER_KEY=
 # Build and run the frontend
 cd "$SCRIPT_DIR/frontend"
 npm install
-docker stop frontend-container || true
-docker rm frontend-container || true
-docker build -t frontend-image .
-docker run -d -p 3001:3001 --name frontend-container frontend-image
+npm start -- --port 3001
