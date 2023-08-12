@@ -7,7 +7,7 @@ executors:
 
 jobs:
   build:
-    working_directory: ~/tm/frontend
+    working_directory: ~/tm
     docker:
       - image: circleci/node:10.16.3
     steps:
@@ -19,7 +19,7 @@ jobs:
           name: Build and test frontend
           command: npm run build
       - persist_to_workspace:
-          root: frontend
+          root: /frontend
           paths:
             - build
 
