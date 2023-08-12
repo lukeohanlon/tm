@@ -39,9 +39,6 @@ jobs:
           key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}} 
           paths:
             - ./frontend/node_modules
-      - run:
-          name: build-frontend
-          command: cd frontend && npm run build
 
   deploy:
     docker:
