@@ -5,6 +5,21 @@ executors:
     docker:
       - image: ruby:3.0.0
 
+jobs:
+  build:
+    # ... your existing build job
+
+  deploy:
+    executor: ruby-executor
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Deploy to EC2
+          command: |
+            chmod +x deploy.sh
+            ./deploy.sh
+
 workflows:
   version: 2
   build-and-deploy:
@@ -14,37 +29,10 @@ workflows:
             branches:
               only:
                 - main
-
-jobs:
-  build:
-    working_directory: ~/todos
-    docker:
-      - image: circleci/node:10.16.3
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@5' 
-      - run:
-          name: install-npm
-          command: npm install
-      - restore_cache:
-          key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}}
-      - run:
-          name: install-npm
-          command: npm install
-      - save_cache:
-          key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}} 
-          paths:
-            - ./frontend/node_modules
-
-  deploy:
-    executor: ruby-executor
-    steps:
-      - checkout
-      - run:
-          name: Deploy to EC2
-          command: |
-            chmod 400 MedTracker.pem
-            ssh -i "MedTracker.pem" $EC2_USERNAME@$EC2_PUBLIC_DNS "cd tm && ./deploy.sh"
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - build
