@@ -1,9 +1,21 @@
 version: 2.1
 
-executors:
-  node-executor:
-    docker:
-      - image: circleci/node:14
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - build
 
   ruby-executor:
     docker:
@@ -11,7 +23,9 @@ executors:
 
 jobs:
   build:
-    executor: node-executor
+     working_directory: ~/tm
+     docker:
+      - image: circleci/node:10.16.3
     steps:
       - checkout
       - run:
@@ -40,12 +54,3 @@ jobs:
           root: backend
           paths:
             - tmp
-
-workflows:
-  version: 2
-  build-and-test:
-    jobs:
-      - build
-      - backend:
-          requires:
-            - build
