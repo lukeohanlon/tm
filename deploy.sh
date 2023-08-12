@@ -6,10 +6,16 @@ ssh -i "MedTracker.pem" $EC2_USERNAME@$EC2_PUBLIC_DNS '
   docker pull lukeohanlon/frontend:latest
   docker pull lukeohanlon/backend:latest
 
-  cd backend # Switch to the backend directory
-  docker run --rm -it -v app-storage:/rails/storage -p 3000:3000 --env RAILS_MASTER_KEY=5e45f0cf35578dc9627cc6fd23e6954a lukeohanlon/backend:latest
+  # Run the backend container
+  docker stop backend-container || true # Stop and remove the existing container if it's running
+  docker rm backend-container || true
+  docker run -d -v app-storage:/rails/storage -p 3000:3000 --env RAILS_MASTER_KEY=5e45f0cf35578dc9627cc6fd23e6954a --name backend-container lukeohanlon/backend:latest
 '
 
-cd frontend 
+# Build and run the frontend
+cd frontend
 npm install
-npm start
+docker stop frontend-container || true # Stop and remove the existing container if it's running
+docker rm frontend-container || true
+docker build -t frontend-image .
+docker run -d -p 3001:3001 --name frontend-container frontend-image

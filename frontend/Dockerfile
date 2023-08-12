@@ -16,10 +16,8 @@ COPY . .
 # Build the frontend application
 RUN npm run build
 
-# Expose the port that your frontend application listens on (if applicable)
-# If your frontend application doesn't listen on any port, you can omit this line.
+# Expose port 3001 for the frontend application
 EXPOSE 3001
 
 # Start the frontend application using your preferred command
-# For example:
 CMD ["npm", "start"]
