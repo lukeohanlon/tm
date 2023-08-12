@@ -42,13 +42,6 @@ jobs:
       - run:
           name: docker-login
           command: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      - run:
-          name: build-frontend-docker-image
-          command: docker build -t $FRONTEND_IMAGE:latest ./frontend
-      - run:
-          name: publish-docker-images
-          command: |
-            docker push $FRONTEND_IMAGE
 
   deploy:
     docker:
