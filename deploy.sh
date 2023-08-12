@@ -2,8 +2,8 @@
 set -e
 
 # Pull and run the Docker images on the EC2 instance
-ssh -i "MedTracker.pem" $EC2_USERNAME@$EC2_PUBLIC_DNS '
-  docker pull lukeohanlon/frontend:latest
+# ssh -i "MedTracker.pem" $EC2_USERNAME@$EC2_PUBLIC_DNS '
+  'docker pull lukeohanlon/frontend:latest
   docker pull lukeohanlon/backend:latest
 
   # Run the backend container
