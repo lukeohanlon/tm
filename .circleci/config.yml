@@ -24,7 +24,7 @@ jobs:
   build:
     working_directory: ~/tm
     docker:
-      - image: circleci/node:16
+      - image: circleci/node:10.16.3
     steps:
       - checkout
       - run:
@@ -42,7 +42,7 @@ jobs:
 
   deploy:
     docker:
-      - image: circleci/node:16
+      - image: circleci/node:10.16.3
     steps:
       - checkout
       - run:
