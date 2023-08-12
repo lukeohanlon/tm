@@ -9,13 +9,11 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build
-      - backend:
-          requires:
-            - build
-      - deploy:
-          requires:
-            - backend
+      - build:
+          filters:
+            branches:
+              only:
+                - main
 
 jobs:
   build:
