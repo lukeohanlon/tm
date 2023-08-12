@@ -39,12 +39,12 @@ jobs:
           root: frontend
           paths:
             - build
-
+jobs:
   backend:
     executor: ruby-executor
     steps:
       - checkout
-      - setup_remote_docker:
+      - setup_remote_docker
       - run:
           name: Install dependencies
           command: bundle install
@@ -55,3 +55,4 @@ jobs:
           root: backend
           paths:
             - tmp
+
