@@ -37,7 +37,7 @@ jobs:
       - run:
           name: deploy-application
           command: |
-            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS "export FRONTEND_IMAGE=\"$FRONTEND_IMAGE\"; export BACKEND_IMAGE=\"$BACKEND_IMAGE\"; rm -rf tm/; git clone https://github.com/lukeohanlon/tm.git; source tm/deploy.sh"
+ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS "rm -rf tm/; git clone https://github.com/lukeohanlon/tm.git; source tm/deploy.sh"
 
 workflows:
   version: 2
