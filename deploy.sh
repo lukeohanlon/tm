@@ -1,10 +1,6 @@
 #!/bin/bash
 set -e
 
-# Pull and run the Docker images
-docker pull lukeohanlon/frontend:latest
-docker pull lukeohanlon/backend:latest
-
 # Run the backend container
 docker stop backend-container || true # Stop and remove the existing container if it's running
 docker rm backend-container || true
