@@ -5,47 +5,50 @@ executors:
     docker:
       - image: ruby:3.0.0
 
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+
 jobs:
   build:
-    executor: node-executor
+    working_directory: ~/todos
+    docker:
+      - image: circleci/node:10.16.3
     steps:
       - checkout
+      - setup_remote_docker
       - run:
-          name: Install dependencies
+          name: update-npm
+          command: 'sudo npm install -g npm@5' 
+      - run:
+          name: install-npm
           command: npm install
+      - restore_cache:
+          key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}}
       - run:
-          name: Build and test frontend
-          command: npm run build
-      - persist_to_workspace:
-          root: frontend
+          name: install-npm
+          command: npm install
+      - save_cache:
+          key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}} 
           paths:
-            - build
+            - ./frontend/node_modules
 
-  deploy-backend:
+  deploy:
     executor: ruby-executor
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Deploy backend to EC2
+          name: Deploy to EC2
           command: |
-            chmod +x deploy-backend.sh
-            ./deploy-backend.sh
-
-  deploy-frontend:
-    executor: node-executor
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: npm install
-      - run:
-          name: Build and test frontend
-          command: npm run build
-      - persist_to_workspace:
-          root: frontend
-          paths:
-            - build
+            chmod +x deploy.sh
+            ./deploy.sh
 
 workflows:
   version: 2
@@ -56,14 +59,7 @@ workflows:
             branches:
               only:
                 - main
-      - deploy-backend:
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - build
-      - deploy-frontend:
+      - deploy:
           filters:
             branches:
               only:
