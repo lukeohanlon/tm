@@ -38,12 +38,6 @@ jobs:
           key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}} 
           paths:
             - ./frontend/node_modules
-  
-      - run:
-          name: publish-docker-images
-          command: |
-            docker push $BACKEND_IMAGE
-            docker push $FRONTEND_IMAGE
 
   deploy:
     executor: ruby-executor
