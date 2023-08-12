@@ -7,18 +7,45 @@ executors:
 
 jobs:
   build:
-    # ... your existing build job
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build and test frontend
+          command: npm run build
+      - persist_to_workspace:
+          root: frontend
+          paths:
+            - build
 
-  deploy:
+  deploy-backend:
     executor: ruby-executor
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Deploy to EC2
+          name: Deploy backend to EC2
           command: |
-            chmod +x deploy.sh
-            ./deploy.sh
+            chmod +x deploy-backend.sh
+            ./deploy-backend.sh
+
+  deploy-frontend:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build and test frontend
+          command: npm run build
+      - persist_to_workspace:
+          root: frontend
+          paths:
+            - build
 
 workflows:
   version: 2
@@ -29,7 +56,14 @@ workflows:
             branches:
               only:
                 - main
-      - deploy:
+      - deploy-backend:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - build
+      - deploy-frontend:
           filters:
             branches:
               only:
