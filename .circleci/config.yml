@@ -7,7 +7,7 @@ executors:
 
 jobs:
   build:
-    working_directory: ~/tm
+    working_directory: ~/tm/frontend
     docker:
       - image: circleci/node:10.16.3
     steps:
