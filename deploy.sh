@@ -14,6 +14,4 @@ cd "$SCRIPT_DIR/frontend"
 npm install
 npm run build
 
-# Serve the frontend build using http-server
-cd "$SCRIPT_DIR/frontend/build"
-http-server -p 3001
+npx http-server -p 3001
