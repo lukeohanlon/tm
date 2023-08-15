@@ -1,11 +1,18 @@
-import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { HiMenu, HiChevronDoubleRight, HiChevronDown } from 'react-icons/hi'
 import '../index.css'
 import logo from '../media/logoblue.png'
+import { useAuth } from '../authContext';
 
-const Navbar = props => {
-  const { toggleMenu, isMenuOpen, setIsMenuOpen } = props
+const Navbar = ({ toggleMenu, isMenuOpen, setIsMenuOpen }) => {
+  const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/'); 
+  };
 
   return (
     <nav className={`navbar main-content ${isMenuOpen ? 'pushed' : ''}`}>
@@ -15,7 +22,7 @@ const Navbar = props => {
           <img src={logo} alt="Logo" className="logo-image" />
         </NavLink>
       </div>
-      {/* <ul
+      <ul
         className={`navbar-Navlinks navbar-menu ${isMenuOpen ? 'active' : ''} ul`}
       >
         <div className="navbar-toggle  menu-arrow" onClick={toggleMenu}>
@@ -29,23 +36,32 @@ const Navbar = props => {
           <NavLink className='a' to="/">Home</NavLink>
         </li>
         <li className='li' onClick={() => toggleMenu()}>
-          <NavLink className='a' to="/about">Reminders</NavLink>
+          <NavLink className='a' to="/mymeds">Reminders</NavLink>
         </li>
         <li className='li' onClick={() => toggleMenu()}>
-          <NavLink className='a' to="/terms-and-conditions">Search</NavLink>
+          <NavLink className='a' to="/about">About</NavLink>
         </li>
         <li className='li' onClick={() => toggleMenu()}>
-          <NavLink  className="nov" to="/contact">
-            <button className="nav-btn">Login</button>
+          <NavLink  className="a" to="/contact">
+         Contact
           </NavLink>
         </li>
+        {isLoggedIn ? (
+          <button className="nav-btn" onClick={handleLogout}>
+            Logout
+          </button>
+        ) : (
+          <NavLink className="nov" to="/signin">
+            <button onClick={() => toggleMenu()}  className="nav-btn">Login</button>
+          </NavLink>
+        )}
       </ul>
       <div className="navbar-toggle bars" onClick={() => toggleMenu()}>
         <div className={`toggle-icon `}>
           {' '}
           <HiMenu />
         </div>
-      </div> */}
+      </div>
     </nav>
   )
 }

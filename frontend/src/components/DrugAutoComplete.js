@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useAuth } from '../authContext'; 
 import Modal from './Modal'
 
 const DrugAutocomplete = ({onAddMedication}) => {
@@ -9,7 +10,6 @@ const DrugAutocomplete = ({onAddMedication}) => {
   const [medications, setMedications] = useState([])
   const [drugInfo, setDrugInfo] = useState([])
   const [selectedDrug, setSelectedDrug] = useState(null)
-
   const [showFullDosageText, setShowFullDosageText] = useState(false)
   const [selectedMedicines, setSelectedMedicines] = useState([])
   const [reminderDate, setReminderDate] = useState('')
@@ -18,6 +18,9 @@ const DrugAutocomplete = ({onAddMedication}) => {
   const [showReminderModal, setShowReminderModal] = useState(false)
   const [recurringHours, setRecurringHours] = useState('');
   const [recurringMinutes, setRecurringMinutes] = useState('');
+  const { authToken } = useAuth(); 
+  const [token, setToken] = useState('');
+
 
 
 
@@ -42,16 +45,28 @@ const DrugAutocomplete = ({onAddMedication}) => {
   // Fetch medications from the API
   const fetchMedications = async () => {
     try {
-      const response = await axios.get('http://16.171.42.210:3000/api/v1/medications')
-      setMedications(response.data)
+      console.log("FETCHING AUTH MEDS: "+authToken)
+      const response = await axios.get('http://localhost:3000/api/v1/medications', {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      setMedications(response.data);
     } catch (error) {
-      console.error('Error fetching medications:', error)
+      console.error('Error fetching medications:', error);
     }
   }
 
   useEffect(() => {
+    setToken(authToken)
     fetchMedications()
   }, [])
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   // fetch drugs by brand name
   const fetchBrandNames = async () => {
@@ -147,11 +162,13 @@ const DrugAutocomplete = ({onAddMedication}) => {
   }
 
   const saveSelectedMedicines = async () => {
-    const apiBaseUrl = 'http://16.171.42.210:3000/api/v1/medications'
+    const apiBaseUrl = 'http://localhost:3000/api/v1/medications'
     console.log(selectedDrug.dosageText[0])
     try {
       if (selectedDrug) {
+        setToken(authToken)
         const medicationData = {
+          // user_id: token,
           generic_name: selectedDrug.brandName || 'Not Availablee',
           purpose: selectedDrug.purpose || 'Not Available',
           dosage_text: selectedDrug.dosageText[0] || 'Not Available',
@@ -201,12 +218,15 @@ const DrugAutocomplete = ({onAddMedication}) => {
     setDose(event.target.value)
   }
 
-
   const createRecurringReminder = async () => {
     try {
       console.log(recurringHours, recurringMinutes)
       if (selectedDrug) {
+        console.log('THIS IS THE AUTH TOKEN' + authToken)
+        setToken(authToken)
+        console.log(token,token,token,token)
         const medicationData = {
+          // user_id: token,
           generic_name: selectedDrug.brandName || 'Not Available',
           purpose: selectedDrug.purpose || 'Not Available',
           dosage_text: selectedDrug.dosageText[0] || 'Not Available',
@@ -220,17 +240,10 @@ const DrugAutocomplete = ({onAddMedication}) => {
   
         try {
           const response = await axios.post(
-            'http://16.171.42.210:3000/api/v1/medications',
-            { medication: medicationData }
+            'http://localhost:3000/api/v1/medications',
+            { medication: medicationData }, config
           );
   
-          // if (notificationPermission === 'granted') {
-          //   scheduleRecurringNotifications(
-          //     response.data.id,
-          //     reminderTime,
-          //     `${recurringHours}h ${recurringMinutes}m`
-          //   );
-          // }
           onAddMedication(response.data);
           closeReminderModal();
           console.log('Medication and Reminder created:', response.data);
@@ -244,8 +257,6 @@ const DrugAutocomplete = ({onAddMedication}) => {
       console.error('Error in createRecurringReminder:', error);
     }
   };
-  
-
 
 
   const scheduleRecurringNotifications = async (
@@ -285,11 +296,13 @@ const DrugAutocomplete = ({onAddMedication}) => {
   };
   
   const renderDrugInfo = () => {
+    const isLogged = authToken !== null;
     if (selectedDrug) {
       const drugName = selectedDrug.brandName
         ? selectedDrug.brandName.charAt(0) +
           selectedDrug.brandName.slice(1).toLowerCase()
         : ''
+       
       return (
         <div className="search-res-wrap">
           <h2>{drugName} Information</h2>
@@ -314,7 +327,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
               <p>
                 <span className="blue">Dosage Text:</span>
               </p>
-              <ul>
+              <ul className='grouped-padding1'>
                 {showFullDosageText
                   ? selectedDrug.dosageText[0]
                       .split(' • ')
@@ -350,13 +363,21 @@ const DrugAutocomplete = ({onAddMedication}) => {
               <span className="blue">Route:</span> {selectedDrug.route}
             </p>
           )}
+          < div className='btn-center'>
           {selectedDrug && (
             <>
-              <button onClick={openReminderModal}>Set Reminder</button>
+             <button
+              onClick={openReminderModal}
+              disabled={!isLogged}
+              title={isLogged ? 'Set Reminder' : 'Must be logged in to use this feature'}
+            >
+              Set Reminder
+            </button>
               {/* <button onClick={saveSelectedMedicines}>Save Medicines</button> */}
             </>
           )}
           <button onClick={cancelSelection}>Cancel</button>
+          </div>
         </div>
       )
     }
@@ -375,6 +396,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
   return (
     <div className="search-wrap">
       <input
+      className='search-input'
         type="text"
         placeholder="Search for drugs by brand name..."
         value={inputValue}
@@ -430,8 +452,8 @@ const DrugAutocomplete = ({onAddMedication}) => {
             />
           </div>
           <div className="modal-btns">
-          <button onClick={createRecurringReminder}>Save Reminder</button>
-          <button onClick={closeReminderModal}>Close</button>
+          <button className='con-btn' onClick={createRecurringReminder}>Save Reminder</button>
+          <button className='con-btn' onClick={closeReminderModal}>Close</button>
           </div>
 
         </Modal>

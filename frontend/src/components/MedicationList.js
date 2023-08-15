@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DrugAutocomplete from './DrugAutoComplete';
 import MyMeds from '../views/MyMeds';
+import { useAuth } from '../authContext';
 
 const MedicationList = () => {
   const [selectedDrug, setSelectedDrug] = useState(null);
@@ -9,6 +10,7 @@ const MedicationList = () => {
   const addMedication = newMedication => {
     setMeds(prevMeds => [...prevMeds, newMedication]);
   };
+  const { authToken } = useAuth();
 
   // This function will receive the selected drug information from DrugAutocomplete
   const handleDrugSelection = (selected) => {
@@ -20,7 +22,7 @@ const MedicationList = () => {
   
   return (
     <div>
-      <h1>Medication List</h1>
+      <h1 className='hpad'>Medication List</h1>
       <DrugAutocomplete onSelect={handleDrugSelection} onAddMedication={addMedication}/>
       <div className="medication-info">
         {selectedDrug && (
@@ -32,7 +34,8 @@ const MedicationList = () => {
             <p>Dosage Form: {selectedDrug.dosageForm}</p>
           </div>
         )}
-        <MyMeds  meds={meds} setMeds={setMeds}/>
+        {/* <MyMeds  meds={meds} setMeds={setMeds}/> */}
+         {authToken ? <MyMeds  meds={meds} setMeds={setMeds}/> :  <div className='loading'><h2>Loading...  </h2><br />If you don't see your medications please Make sure you are signed in!</div>}
       </div>
     </div>
   );
