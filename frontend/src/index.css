@@ -1603,20 +1603,40 @@ select {
 width: 100%;
 color: grey;
 }
+.css-1yn7dcr-MuiFormControl-root-MuiTextField-root {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
 
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+  width: 100%;
+  border-radius: 5px !important;
+  background-color: #fff;
+}
+.css-e4w4as-MuiFormLabel-root-MuiInputLabel-root, .css-e4w4as-MuiFormLabel-root-MuiInputLabel-root {
+  font-family: 'Oslwald',sans-serif !important;
+}
 button[type='submit'] {
 padding: 0.55rem 1.5rem;
 font-size: 1rem;
 background-color: rgb(3, 153, 240);
 color: #fff;
 border: none;
-border-radius: 4px;
+border-radius: 10px;
 cursor: pointer;
 box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.366);
 transition: background-color 0.3s ease;
 display: flex;
-justify-self: flex-end;
-justify-content: flex-end;
+justify-content: center;
 width: fit-content;
 margin-top: 1em;
 }
