@@ -230,7 +230,7 @@ const SignIn = () => {
               Forgot Password?
               </p> */}
 
-            <p>
+            <p className='margin-top-0'>
               Already have an account?
               <span
                 className="switch-form"
