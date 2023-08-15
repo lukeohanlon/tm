@@ -3,7 +3,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Run the backend container (if needed)
+# Run the backend container 
 cd "$SCRIPT_DIR/backend"
 docker stop backend-container || true 
 docker rm backend-container || true
@@ -12,8 +12,6 @@ docker run -d -v app-storage:/rails/storage -p 3000:3000 --env RAILS_MASTER_KEY=
 # Build the frontend
 cd "$SCRIPT_DIR/frontend"
 npm install
-npm run build
+npm run build     
+npm run serve       
 
-# Start the frontend server
-npm install -g serve
-serve -s build -l 3001

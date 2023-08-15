@@ -244,6 +244,9 @@ h1 {
   gap: 20px;
   margin: 0 10%;
 }
+.css-10botns-MuiInputBase-input-MuiFilledInput-input {
+  font-weight: 300 !important;
+}
 
 .med-card {
   display: flex;
