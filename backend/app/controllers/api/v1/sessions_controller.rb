@@ -10,7 +10,7 @@ class Api::V1::SessionsController < ApplicationController
         token = JWT.encode({ user_id: @user.id }, Rails.application.credentials.secret_key_base)
         render json: { message: 'Login successful', user: @user, authToken: token }
       else
-        render json: { error: 'Invalid email or password' }, status: :unprocessable_entity
+        render json: { error: 'Invalid email or password', details: @user.errors.full_messages }, status: :unprocessable_entity
       end
     end
     def new
