@@ -13,4 +13,4 @@ npm install
 npm run build
 
 # Copy the built assets to the Nginx web directory (usually /var/www/html)
-cp -R build/* /var/www/html/
+sudo cp -R build/* /var/www/html/
