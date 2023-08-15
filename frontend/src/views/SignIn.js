@@ -23,7 +23,7 @@ const SignIn = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:3000/api/v1/login',
+        'http://13.48.19.43:3000/api/v1/login',
         {
           user: {
             email: email,
@@ -48,7 +48,7 @@ const SignIn = () => {
   const handleRegister = async () => {
    
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/signup', {
+      const response = await axios.post('http://13.48.19.43:3000/api/v1/signup', {
         user: {
           email: emailr,
           password: passwordr,

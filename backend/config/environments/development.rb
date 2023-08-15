@@ -70,6 +70,18 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+  config.active_support.deprecation = :silence
+  require "active_support/core_ext/integer/time"
+
+Rails.application.configure do
+  # ... other configurations ...
+
+  # Add the JWT secret key configuration
+  config.jwt_secret_key = '271e0cfa158f8738969533a81946f4ed162d7715aead42e179871ea766d475d47cdaa8a40bab2650ad2a22580dc669bbce3ecfce6c3bfe8dd24ca5014bf24b11'
+
+  # ... other configurations ...
+end
+
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true

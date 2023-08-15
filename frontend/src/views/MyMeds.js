@@ -30,7 +30,7 @@ const MyMeds = ({ meds, setMeds }) => {
       try {
         console.log("User Token:", userToken); 
         if (userToken) {
-        const response = await axios.get('http://localhost:3000/api/v1/medications', {
+        const response = await axios.get('http://13.48.19.43:3000/api/v1/medications', {
           headers: { Authorization: `Bearer ${userToken}` }
           
         });
@@ -55,7 +55,7 @@ const MyMeds = ({ meds, setMeds }) => {
 
   const handleDelete = async (id) => {
     try {
-      const apiBaseUrl = `http://localhost:3000/api/v1/medications/${id}`;
+      const apiBaseUrl = `http://13.48.19.43:3000/api/v1/medications/${id}`;
       await axios.delete(apiBaseUrl);
       // Remove the deleted medication from the state
       setMeds((prevMeds) => prevMeds.filter((med) => med.id !== id));

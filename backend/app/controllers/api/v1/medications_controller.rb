@@ -1,5 +1,12 @@
 class Api::V1::MedicationsController < ApplicationController
   before_action :set_medication, only: %i[show update destroy]
+  skip_before_action :verify_authenticity_token, only: [:create]
+  # before_action :authenticate_user! # Use Devise's method to authenticate user
+
+
+
+
+
   # skip_before_action :verify_authenticity_token
 
   
@@ -41,18 +48,18 @@ class Api::V1::MedicationsController < ApplicationController
     render json: { message: 'Medication deleted successfully' }, status: :ok
   end
 
-  private
-
-  # Use callbacks to share common setup or constraints between actions.
-  def set_medication
-    @medication = Medication.find(params[:id])
-  end
-
+ private
+ def set_medication
+  @medication = Medication.find(params[:id])
+rescue ActiveRecord::RecordNotFound
+  render json: { error: 'Medication not found' }, status: :not_found
+end
   
 
   # Only allow a list of trusted parameters through.
   def medication_params
     params.require(:medication).permit(
+      # :user_id,
       :generic_name,
       :purpose,
       :dosage_text,

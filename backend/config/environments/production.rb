@@ -72,6 +72,7 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "backend_production"
 
   config.action_mailer.perform_caching = false
+  config.action_mailer.default_url_options = { host: :all }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -86,6 +87,16 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+  require "active_support/core_ext/integer/time"
+
+Rails.application.configure do
+  # ... other configurations ...
+
+  # Add the JWT secret key configuration
+  config.jwt_secret_key = '271e0cfa158f8738969533a81946f4ed162d7715aead42e179871ea766d475d47cdaa8a40bab2650ad2a22580dc669bbce3ecfce6c3bfe8dd24ca5014bf24b11'
+
+  # ... other configurations ...
+end
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [

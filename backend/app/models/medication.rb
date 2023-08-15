@@ -13,6 +13,7 @@ class Medication < ApplicationRecord
     attribute :reminder_time, :string
     attribute :dose, :string
     attribute :recurring_interval, :string
+    # attribute :user_id, :string
     
     # accepts_nested_attributes_for :reminders
   end

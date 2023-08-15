@@ -46,7 +46,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
   const fetchMedications = async () => {
     try {
       console.log("FETCHING AUTH MEDS: "+authToken)
-      const response = await axios.get('http://localhost:3000/api/v1/medications', {
+      const response = await axios.get('http://13.48.19.43:3000/api/v1/medications', {
         headers: {
           Authorization: `Bearer ${authToken}`
         }
@@ -162,7 +162,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
   }
 
   const saveSelectedMedicines = async () => {
-    const apiBaseUrl = 'http://localhost:3000/api/v1/medications'
+    const apiBaseUrl = 'http://13.48.19.43:3000/api/v1/medications'
     console.log(selectedDrug.dosageText[0])
     try {
       if (selectedDrug) {
@@ -240,7 +240,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
   
         try {
           const response = await axios.post(
-            'http://localhost:3000/api/v1/medications',
+            'http://13.48.19.43:3000/api/v1/medications',
             { medication: medicationData }, config
           );
   

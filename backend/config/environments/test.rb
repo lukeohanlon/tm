@@ -55,7 +55,14 @@ Rails.application.configure do
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
-
+  Rails.application.configure do
+    # ... other configurations ...
+  
+    # Add the JWT secret key configuration
+    config.jwt_secret_key = '271e0cfa158f8738969533a81946f4ed162d7715aead42e179871ea766d475d47cdaa8a40bab2650ad2a22580dc669bbce3ecfce6c3bfe8dd24ca5014bf24b11'
+  
+    # ... other configurations ...
+  end
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
