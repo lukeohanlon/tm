@@ -3,11 +3,22 @@ version: 2.1
 orbs:
   node: circleci/node@5.1.0
 
+jobs:
+  build-frontend:
+    docker:
+      - image: circleci/node:10.16.3
+    steps:
+      - checkout
+      - run:
+          name: install-npm
+          command: npm install
+          working_directory: ~/tm/frontend
+
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build:
+      - build-frontend:
           filters:
             branches:
               only:
@@ -18,28 +29,9 @@ workflows:
               only:
                 - main
           requires:
-            - build
+            - build-frontend
 
 jobs:
-  build:
-    working_directory: ~/tm
-    docker:
-      - image: circleci/node:10.16.3
-    steps:
-      - checkout
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@5' 
-          key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}}
-      - run:
-          name: install-npm
-          command: npm install
-          working_directory: ~/tm/frontend
-      - save_cache:
-          key: dependency-cache-frontend-{{ checksum "frontend/package-lock.json"}} 
-          paths:
-            - ./frontend/node_modules
-
   deploy:
     docker:
       - image: circleci/node:10.16.3
@@ -48,4 +40,4 @@ jobs:
       - run:
           name: deploy-application
           command: |
-            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS "rm -rf tm/; git clone https://github.com/lukeohanlon/tm.git; source tm/deploy.sh; cd tm/frontend && npm install && npm start -- --port 3001"
+            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS "rm -rf tm/; git clone https://github.com/lukeohanlon/tm.git; source tm/deploy.sh"
