@@ -36,11 +36,7 @@ function App() {
        
         const isAuthenticated = true;
         setIsAuthenticated(isAuthenticated);
-  
-       
         setShowPopup(true);
-  
-       
         setTimeout(() => {
           setShowPopup(false);
         }, 3000);
