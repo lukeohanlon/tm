@@ -2232,6 +2232,15 @@ background-color: #fff;
   color: rgb(3, 153, 240) !important;
   font-family: 'Oswald', sans-serif !important;
   font-weight: 300 !important;
+  width: 200px !important;
+}
+.css-2bxn45:-webkit-autofill {
+  animation-duration: 5000s;
+  font-weight: 300 !important;
+  animation-name: mui-auto-fill;
+}
+button[type=submit] {
+  width: 200px !important;
 }
 
 .css-1qw96cp {
@@ -2275,6 +2284,7 @@ button[type=submit] {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
+  width: 200px !important;
 }
 css-14x1nlk {
   color: rgba(0, 0, 0, 0.6);
@@ -2301,4 +2311,23 @@ css-14x1nlk {
 
 .margin-top-0 {
   margin-top: 0 !important;
+}
+button[type=submit] {
+  background-color: #fff !important;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,.366);
+  color: #0399f0 !important;
+  cursor: pointer;
+  display: flex;
+  font-size: 1rem !important;
+  justify-content: center;
+  margin-top: 1em;
+  padding: 10px 20px !important;
+  transition: background-color .3s ease;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 0.8125rem !important;
+  width: 200px !important;
 }
