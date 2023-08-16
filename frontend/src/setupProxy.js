@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'http://13.48.19.43:3000',
+      target: 'https://medminer.site',
       changeOrigin: true,
       secure: false,
     })

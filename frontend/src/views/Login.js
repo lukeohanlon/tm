@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
   
     try {
-      const response = await axios.post('https://medminer/api/v1/login', {
+      const response = await axios.post('https://medminer.site/api/v1/login', {
         user: {
           email: email,
           password: password,

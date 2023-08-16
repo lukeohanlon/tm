@@ -18,7 +18,7 @@ const EditModal = ({ medication, onClose, onEditSuccess }) => {
 
   const handleEditSubmit = async () => {
     try {
-      const apiBaseUrl = `https://medminer/api/v1/medications/${medication.id}`;
+      const apiBaseUrl = `https://medminer.site/api/v1/medications/${medication.id}`;
       const response = await axios.put(apiBaseUrl, editedMedication);
 
       // Call the onEditSuccess callback with the updated medication

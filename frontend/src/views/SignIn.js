@@ -1,10 +1,9 @@
 import React, { useState, useRef } from 'react'
 import axios from 'axios'
-import { TextField, Button } from '@mui/material'
+import { TextField, Button, Snackbar } from '@mui/material'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
-import EmojiNatureIconOutlined from '@mui/icons-material/EmojiNatureOutlined'
 import { useAuth } from '../authContext'
 import { useNavigate } from 'react-router-dom'
 
@@ -14,6 +13,11 @@ const SignIn = () => {
   const [emailr, setEmailr] = useState('')
   const [passwordr, setPasswordr] = useState('')
   const [flip, setFlip] = useState(true)
+  const [notRegisteredPopup, setNotRegisteredPopup] = useState(false)
+  const [noMatch, setNoMatch] = useState(false)
+  const [loginErrorPopup, setLoginErrorPopup] = useState(false)
+  const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false)
+  const [showErrorSnackbar, setShowErrorSnackbar] = useState(false)
   const [passwordConfirmationr, setPasswordConfirmationr] = useState('')
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -23,7 +27,7 @@ const SignIn = () => {
 
     try {
       const response = await axios.post(
-        'https://medminer/api/v1/login',
+        'https://medminer.site/api/v1/login',
         {
           user: {
             email: email,
@@ -42,23 +46,32 @@ const SignIn = () => {
       navigate('/') // Change '/dashboard' to the desired route
     } catch (error) {
       console.error('Login error:', error)
+      setLoginErrorPopup(true)
     }
   }
 
-  const handleRegister = async () => {
+  const handleRegister = async e => {
+    e.preventDefault()
+    if (passwordr == passwordConfirmationr) {
+      try {
+        const response = await axios.post(
+          'https://medminer.site/api/v1/signup',
+          {
+            user: {
+              email: emailr,
+              password: passwordr,
+              password_confirmation: passwordConfirmationr,
+            },
+          }
+        )
+        setShowSuccessSnackbar(true)
+      } catch (error) {
+        console.error('Registration error:', error)
    
-    try {
-      const response = await axios.post('https://medminer/api/v1/signup', {
-        user: {
-          email: emailr,
-          password: passwordr,
-          password_confirmation: passwordConfirmationr,
-        },
-      })
-
-      // Handle successful registration, such as redirecting to the login page
-    } catch (error) {
-      console.error('Registration error:', error)
+        setShowErrorSnackbar(true)
+      }
+    } else {
+      setNoMatch(true)
     }
   }
 
@@ -110,6 +123,7 @@ const SignIn = () => {
                     fullWidth
                     variant="filled"
                     required
+                    type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     label="Password"
@@ -187,6 +201,7 @@ const SignIn = () => {
                     value={passwordr}
                     onChange={e => setPasswordr(e.target.value)}
                     variant="filled"
+                    type="password"
                     label="Password"
                     required
                     id="password"
@@ -201,8 +216,9 @@ const SignIn = () => {
                     fullWidth
                     variant="filled"
                     value={passwordConfirmationr}
-                    onChange={(e) => setPasswordConfirmationr(e.target.value)}
+                    onChange={e => setPasswordConfirmationr(e.target.value)}
                     label="Confirm Password"
+                    type="password"
                     required
                     id="confirm-password"
                   />
@@ -230,7 +246,7 @@ const SignIn = () => {
               Forgot Password?
               </p> */}
 
-            <p className='margin-top-0'>
+            <p className="margin-top-0">
               Already have an account?
               <span
                 className="switch-form"
@@ -246,6 +262,34 @@ const SignIn = () => {
               </span>
             </p>
           </div>
+          <Snackbar
+            open={showSuccessSnackbar}
+            autoHideDuration={6000}
+            className="center-snackbar flips"
+            onClose={() => setShowSuccessSnackbar(false)}
+            message="Registration successful! You may now login."
+          />
+          <Snackbar
+            open={showErrorSnackbar}
+            className="center-snackbar flips"
+            autoHideDuration={6000}
+            onClose={() => setShowErrorSnackbar(false)}
+            message=" Registration failed. Please try again."
+          />
+          <Snackbar
+            open={noMatch}
+            autoHideDuration={6000}
+            className="center-snackbar flips"
+            onClose={() => setNoMatch(false)}
+            message="Passwords do not match."
+          />
+          <Snackbar
+            open={loginErrorPopup}
+            className="center-snackbar"
+            autoHideDuration={6000}
+            onClose={() => setLoginErrorPopup(false)}
+            message="Incorrect email or password."
+          />
           {/* </Card> */}
         </div>
       </div>

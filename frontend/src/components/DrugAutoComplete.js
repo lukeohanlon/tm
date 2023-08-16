@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useAuth } from '../authContext'; 
+import { useAuth } from '../authContext'
+import { Snackbar  } from '@mui/material'
 import Modal from './Modal'
 
-const DrugAutocomplete = ({onAddMedication}) => {
+const DrugAutocomplete = ({ onAddMedication }) => {
   const [inputValue, setInputValue] = useState('')
   const [brandNames, setBrandNames] = useState([])
   const [showDropdown, setShowDropdown] = useState(false)
@@ -15,20 +16,22 @@ const DrugAutocomplete = ({onAddMedication}) => {
   const [reminderDate, setReminderDate] = useState('')
   const [reminderTime, setReminderTime] = useState('')
   const [dose, setDose] = useState('')
+  const [notLogged, setNotLogged] = useState(false)
   const [showReminderModal, setShowReminderModal] = useState(false)
-  const [recurringHours, setRecurringHours] = useState('');
-  const [recurringMinutes, setRecurringMinutes] = useState('');
-  const { authToken } = useAuth(); 
-  const [token, setToken] = useState('');
+  const [recurringHours, setRecurringHours] = useState('')
+  const [recurringMinutes, setRecurringMinutes] = useState('')
+  const { authToken } = useAuth()
+  const [token, setToken] = useState('')
 
-
-
-
-
+  const isLogged = authToken !== null;
   const openReminderModal = () => {
-    setShowReminderModal(true)
-  }
-
+   
+    if (!isLogged) {
+      setNotLogged(true); // Set the state first
+    } else {
+      setShowReminderModal(true); // Show the modal if logged in
+    }
+  };
   const closeReminderModal = () => {
     setShowReminderModal(false)
   }
@@ -45,15 +48,18 @@ const DrugAutocomplete = ({onAddMedication}) => {
   // Fetch medications from the API
   const fetchMedications = async () => {
     try {
-      console.log("FETCHING AUTH MEDS: "+authToken)
-      const response = await axios.get('https://medminer/api/v1/medications', {
-        headers: {
-          Authorization: `Bearer ${authToken}`
+      console.log('FETCHING AUTH MEDS: ' + authToken)
+      const response = await axios.get(
+        'https://medminer.site/api/v1/medications',
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
         }
-      });
-      setMedications(response.data);
+      )
+      setMedications(response.data)
     } catch (error) {
-      console.error('Error fetching medications:', error);
+      console.error('Error fetching medications:', error)
     }
   }
 
@@ -66,7 +72,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  };
+  }
 
   // fetch drugs by brand name
   const fetchBrandNames = async () => {
@@ -119,7 +125,6 @@ const DrugAutocomplete = ({onAddMedication}) => {
     }
   }
 
-
   const handleSelectBrand = async brandName => {
     const apiKey = 'lpJ5J2uvxEZeQZkl3JtmeegWpMzgNlUcL00ahzZK'
     brandName = brandName.toUpperCase()
@@ -150,7 +155,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
           route: selectedDrugInfo.openfda.route?.join(', ') || '',
           dosageAmount: selectedDrugInfo.dosage_and_administration || '',
         })
-        setInputValue('');
+        setInputValue('')
 
         setShowDropdown(false)
       } else {
@@ -162,7 +167,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
   }
 
   const saveSelectedMedicines = async () => {
-    const apiBaseUrl = 'https://medminer/api/v1/medications'
+    const apiBaseUrl = 'https://medminer.site/api/v1/medications'
     console.log(selectedDrug.dosageText[0])
     try {
       if (selectedDrug) {
@@ -205,15 +210,15 @@ const DrugAutocomplete = ({onAddMedication}) => {
     setReminderDate(event.target.value)
   }
   const handleRecurringHoursChange = event => {
-    setRecurringHours(event.target.value);
-  };
+    setRecurringHours(event.target.value)
+  }
   const handleRecurringMinutesChange = event => {
-    setRecurringMinutes(event.target.value);
-  };
+    setRecurringMinutes(event.target.value)
+  }
   const handleReminderTimeChange = event => {
-    setReminderTime(event.target.value);
-  };
-  
+    setReminderTime(event.target.value)
+  }
+
   const handleDoseChange = event => {
     setDose(event.target.value)
   }
@@ -224,7 +229,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
       if (selectedDrug) {
         console.log('THIS IS THE AUTH TOKEN' + authToken)
         setToken(authToken)
-        console.log(token,token,token,token)
+        console.log(token, token, token, token)
         const medicationData = {
           // user_id: token,
           generic_name: selectedDrug.brandName || 'Not Available',
@@ -236,46 +241,47 @@ const DrugAutocomplete = ({onAddMedication}) => {
           reminder_date: reminderDate,
           reminder_time: reminderTime,
           recurring_interval: `${recurringHours}h ${recurringMinutes}m`,
-        };
-  
+        }
+
         try {
           const response = await axios.post(
-            'https://medminer/api/v1/medications',
-            { medication: medicationData }, config
-          );
-  
-          onAddMedication(response.data);
-          closeReminderModal();
-          console.log('Medication and Reminder created:', response.data);
+            'https://medminer.site/api/v1/medications',
+            { medication: medicationData },
+            config
+          )
+
+          onAddMedication(response.data)
+          closeReminderModal()
+          console.log('Medication and Reminder created:', response.data)
         } catch (error) {
-          console.error('Error creating medication and reminder:', error);
+          console.error('Error creating medication and reminder:', error)
         }
       } else {
-        console.error('No selected drug.');
+        console.error('No selected drug.')
       }
     } catch (error) {
-      console.error('Error in createRecurringReminder:', error);
+      console.error('Error in createRecurringReminder:', error)
     }
-  };
-
+  }
 
   const scheduleRecurringNotifications = async (
     medicationId,
     reminderTime,
     interval
   ) => {
-    const totalMinutes = parseInt(recurringHours) * 60 + parseInt(recurringMinutes);
-  
+    const totalMinutes =
+      parseInt(recurringHours) * 60 + parseInt(recurringMinutes)
+
     try {
-      const permission = await Notification.requestPermission();
+      const permission = await Notification.requestPermission()
       if (permission === 'granted') {
-        const userSelectedTime = new Date(`2000-01-01T${reminderTime}`);
-        let currentTime = userSelectedTime.getTime();
-    
+        const userSelectedTime = new Date(`2000-01-01T${reminderTime}`)
+        let currentTime = userSelectedTime.getTime()
+
         for (let i = 0; i <= 24 * 60; i += totalMinutes) {
-          currentTime += i * 60 * 1000; // Convert to milliseconds
-          const notificationTime = new Date(currentTime);
-    
+          currentTime += i * 60 * 1000 // Convert to milliseconds
+          const notificationTime = new Date(currentTime)
+
           // Schedule the notification
           navigator.serviceWorker.ready.then(registration => {
             registration.showNotification(
@@ -286,23 +292,23 @@ const DrugAutocomplete = ({onAddMedication}) => {
                 tag: `medication-reminder-${medicationId}`,
                 badge: '/path-to-badge.png',
               }
-            );
-          });
+            )
+          })
         }
       }
     } catch (error) {
-      console.error('Error requesting notification permission:', error);
+      console.error('Error requesting notification permission:', error)
     }
-  };
-  
+  }
+
   const renderDrugInfo = () => {
-    const isLogged = authToken !== null;
+    const isLogged = authToken !== null
     if (selectedDrug) {
       const drugName = selectedDrug.brandName
         ? selectedDrug.brandName.charAt(0) +
           selectedDrug.brandName.slice(1).toLowerCase()
         : ''
-       
+
       return (
         <div className="search-res-wrap">
           <h2>{drugName} Information</h2>
@@ -327,7 +333,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
               <p>
                 <span className="blue">Dosage Text:</span>
               </p>
-              <ul className='grouped-padding1'>
+              <ul className="grouped-padding1">
                 {showFullDosageText
                   ? selectedDrug.dosageText[0]
                       .split(' • ')
@@ -363,20 +369,31 @@ const DrugAutocomplete = ({onAddMedication}) => {
               <span className="blue">Route:</span> {selectedDrug.route}
             </p>
           )}
-          < div className='btn-center'>
-          {selectedDrug && (
-            <>
-             <button
-              onClick={openReminderModal}
-              disabled={!isLogged}
-              title={isLogged ? 'Set Reminder' : 'Must be logged in to use this feature'}
-            >
-              Set Reminder
-            </button>
-              {/* <button onClick={saveSelectedMedicines}>Save Medicines</button> */}
-            </>
-          )}
-          <button onClick={cancelSelection}>Cancel</button>
+          <div className="btn-center">
+            {selectedDrug && (
+              <>
+                <button
+                  onClick={openReminderModal}
+                  // disabled={!isLogged}
+                  // title={
+                  //   isLogged
+                  //     ? 'Set Reminder'
+                  //     : 'Must be logged in to use this feature'
+                  // }
+                >
+                  Set Reminder
+                </button>
+                <Snackbar
+                  open={notLogged}
+                  className="center-snackbar"
+                  autoHideDuration={6000}
+                  onClose={() => setNotLogged(false)}
+                  message="Must be logged in to use this feature"
+                />
+                {/* <button onClick={saveSelectedMedicines}>Save Medicines</button> */}
+              </>
+            )}
+            <button onClick={cancelSelection}>Cancel</button>
           </div>
         </div>
       )
@@ -396,7 +413,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
   return (
     <div className="search-wrap">
       <input
-      className='search-input'
+        className="search-input"
         type="text"
         placeholder="Search for drugs by brand name..."
         value={inputValue}
@@ -413,8 +430,7 @@ const DrugAutocomplete = ({onAddMedication}) => {
       )}
       {showReminderModal && (
         <Modal brandName={selectedDrug.brandName} onClose={closeReminderModal}>
-          
-          <div className='mod-in'>
+          <div className="mod-in">
             <label>Date:</label>
             <input
               type="date"
@@ -422,21 +438,21 @@ const DrugAutocomplete = ({onAddMedication}) => {
               onChange={handleReminderDateChange}
             />
           </div>
-          <div className='mod-in'>
+          <div className="mod-in">
             <label>Time:</label>
             <input
               type="time"
               value={reminderTime}
               onChange={handleReminderTimeChange}
-              step="60" 
+              step="60"
             />
           </div>
-          
-          <div className='mod-in'>
+
+          <div className="mod-in">
             <label>Dose:</label>
             <input type="text" value={dose} onChange={handleDoseChange} />
           </div>
-          <div className='mod-ev'>
+          <div className="mod-ev">
             <label>Due Every:</label> <br />
             <input
               type="number"
@@ -452,10 +468,13 @@ const DrugAutocomplete = ({onAddMedication}) => {
             />
           </div>
           <div className="modal-btns">
-          <button className='con-btn' onClick={createRecurringReminder}>Save Reminder</button>
-          <button className='con-btn' onClick={closeReminderModal}>Close</button>
+            <button className="con-btn" onClick={createRecurringReminder}>
+              Save Reminder
+            </button>
+            <button className="con-btn" onClick={closeReminderModal}>
+              Close
+            </button>
           </div>
-
         </Modal>
       )}
       {renderDrugInfo()}

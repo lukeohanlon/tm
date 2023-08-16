@@ -10,7 +10,7 @@ const Account = () => {
 
   const fetchAccountInfo = async () => {
     try {
-      const response = await axios.get('https://medminer/api/v1/accounts/show', {
+      const response = await axios.get('https://medminer.site/api/v1/accounts/show', {
         // You might need to send authentication tokens or cookies depending on your setup
         // headers: { Authorization: 'Bearer ' + token }
       });
