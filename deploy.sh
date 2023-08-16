@@ -17,4 +17,4 @@ docker run -d -v app-storage:/rails/storage -p 3000:3000 --env RAILS_MASTER_KEY=
 cd "$SCRIPT_DIR/frontend"
 npm install
 npm run build
-serve -l 3001
+serve -s build -l 3001
