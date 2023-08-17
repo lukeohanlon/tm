@@ -2001,6 +2001,12 @@ margin-top: 1em;
   .navbar-menu.active {
     right: 0;
   }
+  .wi {
+    width: 70vw;
+  }
+  .grouped-padding2 {
+    width: 80%;
+  }
 }
 @media (max-width: 768px) {
   .navbar-menu.active {
@@ -2400,4 +2406,8 @@ h1 {
 
 .flips{
   transform: scaleX(-1) !important;
+}
+
+.wi {
+  width: 100%;
 }

@@ -34,7 +34,10 @@ const EditModal = ({ medication, onClose, onEditSuccess }) => {
   return (
     <div className="editmodal">
       <div className="modal-content">
-        <h2>Edit Medication Reminder</h2>
+        <h2 className='white'>Edit Medication Reminder</h2>
+        <form onSubmit={handleEditSubmit}>
+
+       
         <label htmlFor="reminder_time"> Time:</label>
         <br />
         <input
@@ -58,9 +61,10 @@ const EditModal = ({ medication, onClose, onEditSuccess }) => {
         {/* Add other input fields for editing */}
         
         <div className="modal-buttons-wrap">
-          <button className='modal-buttons' onClick={handleEditSubmit}>Save Changes</button>
+          <button className='modal-buttons' >Save Changes</button>
           <button className='modal-buttons' onClick={onClose}>Cancel</button>
         </div>
+        </form>
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ const Home = () => {
       </header>
       <div className="home-top">
         <h1 className="title-home">Get Started Today</h1>
-        <p className='head-boost'>
+        <p className='head-boost '>
           Welcome to MedMinder, your all-in-one solution for effortless
           medication management. Say goodbye to the stress of tracking your
           medications and hello to a healthier, more organized you.
@@ -52,26 +52,32 @@ const Home = () => {
       </section>
       <section className="why-choose">
         <h2 className="section-title ">Why Choose MedMinder</h2>
-        <p className='head-boost1 grouped-padding2'>
+        <p className='head-boost1 grouped-padding2 wi'>
           MedMinder is dedicated to providing you with a seamless medication
           tracking experience. With our user-friendly interface and powerful
           features, you'll never miss a dose again.
         </p>
         <ul className='head-boost grouped-padding2'>
           <li>
+            <p className='wi'>
             Simplify Your Routine Managing multiple medications can be
             overwhelming. We're here to simplify your routine and help you stay
             on track effortlessly.
+            </p>
           </li>
           <li>
+          <p className='wi'>
             Put Your Health First Your well-being is our priority. By providing
             accurate medication information and reliable reminders, we empower
             you to prioritize your health.
+            </p>
           </li>
           <li>
+          <p className='wi'>
             Stay Organized Anywhere Access your medication information and
             reminders from anywhere, whether you're at home or on the go. Our
             app syncs seamlessly across devices.
+            </p>
           </li>
         </ul>
       </section>
